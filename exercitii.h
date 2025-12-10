@@ -779,16 +779,36 @@ void ex15() {
 //-suma elem. de pe coloana k este minima.
 ///todo?????
 void ex16() {
-    int n, k;
-    ifstream fin("D:/info/c++/clion/metodaGreedy/exercitii.txt");
-    fin >> n >> k;
-    int mat[n][n];
+    int n = 5, k = 1;
+    // cin >> n >> k;
+    int mat[n][n] = {}, ct = 1;
     bool folosit[n*n] = {};
     for(int i = 0; i < n; i++) {
-        int ok = 0;
-        for(int j = 0; j < n * n; j++) {
+        mat[i][k] = (i + 1) * (k + 1);
+        folosit[mat[i][k]] = true;
+    }
 
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < k; j++) {
+            while(folosit[ct]) ct++;
+            mat[i][j] = ct;
+            folosit[ct] = true;
         }
+    }
+
+    for(int i = 0; i < n; i++) {
+        for(int j = k + 1; j < n; j++) {
+            while(folosit[ct]) ct++;
+            mat[i][j] = ct;
+            folosit[ct] = true;
+        }
+    }
+
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            cout << mat[i][j] << ' ';
+        }
+        cout << endl;
     }
 }
 
@@ -866,5 +886,20 @@ void ex17() {
     }
 
     cout << maxim << " " << anMaxim << endl;
+}
+
+//intr-un acvariu se gasesc n pesti carnivori, numerotati de la 1 la n. Stiind, pt. fiecare peste, pestii pe care ii poate manca,
+//realizati un program care det. ordinea in care acestia se vor manca intre ei, a. i. la final, in acvariu, sa ramana un nr. min.
+//de pesti
+
+struct Peste {
+    int v[100];
+    int nr;
+};
+
+void ex18() {
+    int n;
+    ifstream fin("D:/info/c++/clion/metodaGreedy/exercitii.txt");
+
 }
 #endif //EXERCITII_H
