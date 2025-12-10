@@ -777,30 +777,24 @@ void ex15() {
 //-contine toate nr. de la 1 la n la patrat;
 //-pe fiecare linie nr. sunt ordonate cresc;
 //-suma elem. de pe coloana k este minima.
-///todo?????
+
 void ex16() {
     int n = 5, k = 1;
     // cin >> n >> k;
-    int mat[n][n] = {}, ct = 1;
+    int mat[n][n] = {}, ctMin = 1, ctMax = n * (k + 1) + 1;
     bool folosit[n*n] = {};
-    for(int i = 0; i < n; i++) {
-        mat[i][k] = (i + 1) * (k + 1);
-        folosit[mat[i][k]] = true;
-    }
 
     for(int i = 0; i < n; i++) {
-        for(int j = 0; j < k; j++) {
-            while(folosit[ct]) ct++;
-            mat[i][j] = ct;
-            folosit[ct] = true;
-        }
-    }
-
-    for(int i = 0; i < n; i++) {
-        for(int j = k + 1; j < n; j++) {
-            while(folosit[ct]) ct++;
-            mat[i][j] = ct;
-            folosit[ct] = true;
+        for(int j = 0; j < n; j++) {
+            if(j <= k) {
+                mat[i][j] = ctMin;
+                folosit[ctMin] = true;
+                ctMin++;
+            }else {
+                mat[i][j] = ctMax;
+                folosit[ctMax] = true;
+                ctMax++;
+            }
         }
     }
 
@@ -894,12 +888,89 @@ void ex17() {
 
 struct Peste {
     int v[100];
+    int ctP = 0;
     int nr;
 };
 
+int part6(Peste p[], int l, int r) {
+    int poz = p[r].nr;
+    int j = l - 1;
+    for(int i = l; i < r; i++) {
+        if(p[i].nr >= poz) {
+            swap(p[i],p[++j]);
+        }
+    }
+    swap(p[j],p[r]);
+    return j + 1;
+}
+
+void quickSort6(Peste p[], int l, int r) {
+    int poz = part6(p,l,r);
+    if(l < poz - 1) quickSort6(p,l, poz - 1);
+    if(r > poz + 1) quickSort6(p,poz + 1, r);
+}
+
+void mananca(Peste p[], int nr, bool mancat[]) {
+    for(int i = 0; i < p[nr].ctP; i++) {
+        if(!mancat[p[nr].v[i]]) {
+            mananca(p, i, mancat);
+            mancat[p[nr].v[i]] = true;
+        }
+        mancat[p[nr].v[i]] = true;
+    }
+}
+
+bool cmp4(Peste a, Peste b) {
+    return a.ctP < b.ctP;
+}
+
 void ex18() {
-    int n;
     ifstream fin("D:/info/c++/clion/metodaGreedy/exercitii.txt");
+    int n;
+    Peste p[100];
+    fin >> n;
+    for(int i = 0; i < n; i++) {
+        fin >> p[i].ctP;
+        for(int j = 0; j < p[i].ctP; j++) {
+            fin >> p[i].v[j];
+        }
+        p[i].nr = i;
+    }
+
+    // quickSort6(p, 0, n - 1);
+    sort(p, p + n,cmp4);
+
+    bool mancat[n + 1] = {};
+    for(int i = 0; i < n; i++) {
+        if(!mancat[p[i].nr]) {
+            mananca(p, i, mancat);
+        }
+    }
+
+    for(int i = 0; i < n; i++) {
+        cout << mancat[i] << " ";
+    }
+
+}
+
+//se considera un grad neorientat cu n noduri. Sa se det. o submultime cu nr. max. de noduri, avand propr. ca oricare doua
+//noduri nu sunt adiacente
+
+struct Nod {
+    int nr, ctVecini = 0;
+    Nod* vecini[100];
+};
+
+void ex19() {
+    ifstream fin("D:/info/c++/clion/metodaGreedy/exercitii.txt");
+    int n, m;
+    fin >> n >> m;
+    int mat[n][n] = {};
+    for(int i = 0; i < m; i++) {
+        int x, y;
+        fin >> x >> y;
+        mat[x][y] = mat[y][x] = 1;
+    }
 
 }
 #endif //EXERCITII_H

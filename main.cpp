@@ -1,5 +1,5 @@
 #include "exercitii.h"
 
 int main() {
-    ex16();
+    ex18();
 }
