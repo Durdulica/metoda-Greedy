@@ -956,21 +956,168 @@ void ex18() {
 //se considera un grad neorientat cu n noduri. Sa se det. o submultime cu nr. max. de noduri, avand propr. ca oricare doua
 //noduri nu sunt adiacente
 
-struct Nod {
-    int nr, ctVecini = 0;
-    Nod* vecini[100];
-};
-
 void ex19() {
     ifstream fin("D:/info/c++/clion/metodaGreedy/exercitii.txt");
     int n, m;
     fin >> n >> m;
-    int mat[n][n] = {};
+    int mat[100][100] = {}, grad[100] = {};
     for(int i = 0; i < m; i++) {
         int x, y;
         fin >> x >> y;
-        mat[x][y] = mat[y][x] = 1;
+        if(!mat[x][y]) {
+            mat[x][y] = mat[y][x] = 1;
+            grad[x]++;
+            grad[y]++;
+        }
     }
 
+    int sol[100] = {}, dim = 0;
+    bool folosit[100] = {};
+
+    while(true) {
+        int nod = -1;
+        int gradMin = INT_MAX;
+
+        for(int i = 1; i <= n; i++) {
+            if(!folosit[i] && grad[i] <= gradMin) {
+                gradMin = grad[i];
+                nod = i;
+            }
+        }
+
+        if(nod == -1) break;
+
+        sol[dim++] = nod;
+        folosit[nod] = true;
+
+        for(int i = 1; i <= n; i++) {
+            if(!folosit[i] && mat[nod][i]) {
+                folosit[i] = true;
+                for(int j = 1; j <= n; j++) {
+                    if(mat[i][j] && !folosit[i]) {
+                        grad[j]--;
+                    }
+                }
+            }
+        }
+    }
+
+    cout << dim << endl;
+    for(int i = 0; i < dim; i++) {
+        cout << sol[i] << " ";
+    }
 }
+
+//se considera un graf neorientat cu n noduri. Sa se det. o submultime cu nr. max de noduri, avand propr. ca oricare doua noduri sunt adiacente
+
+void ex20() {
+    ifstream fin("D:/info/c++/clion/metodaGreedy/exercitii.txt");
+    int n, m;
+    fin >> n >> m;
+    int mat[100][100] = {}, grad[100] = {};
+    for(int i = 0; i < m; i++) {
+        int x, y;
+        fin >> x >> y;
+        if(!mat[x][y]) {
+            mat[x][y] = mat[y][x] = 1;
+            grad[x]++;
+            grad[y]++;
+        }
+    }
+
+    int sol[100] = {}, dim = 0;
+    bool folosit[100] = {}, testat[100] = {};
+    while(true) {
+        int nod = -1;
+        int gradMax = INT_MIN;
+
+        for(int i = 1; i <= n; i++) {
+            if(!folosit[i] && !testat[i] && grad[i] > gradMax) {
+                gradMax = grad[i];
+                nod = i;
+            }
+        }
+
+        if(nod == -1) break;
+
+        int ok = 1;
+        for(int j = 0; j < dim; j++) {
+            if(!mat[nod][sol[j]]) {
+                ok = 0;
+                break;
+            }
+        }
+
+
+        if(ok) {
+            sol[dim++] = nod;
+            folosit[nod] = true;
+        }else {
+            grad[nod] = -1;
+        }
+        testat[nod] = true;
+    }
+
+    cout << dim << endl;
+    for(int i = 0; i < dim; i++) {
+        cout << sol[i] << " ";
+    }
+}
+
+//se considera un sir de n intervale de forma [Ai,Bi], nr. intregi. Un interval din sirul celor n poate fi eliminatdaca exista un altul care
+//il include strict pe acesta. Det nr. maxim de intervale care pot fi eliminate.
+
+struct Interval {
+    int low, high, nr;
+};
+
+int part7(Interval interval[], int l, int r) {
+    int p = interval[r].high;
+    int j = l - 1;
+    for(int i = l; i < r; i++) {
+        if(interval[i].high >= p) {
+            swap(interval[i], interval[++j]);
+        }
+    }
+    swap(interval[r], interval[++j]);
+
+    return j;
+}
+
+void quickSort7(Interval interval[], int l, int r) {
+    if(l < r) {
+        int p = part7(interval, l, r);
+        if(l < p) quickSort7(interval, l, p - 1);
+        if(r > p) quickSort7(interval, p + 1, r);
+    }
+}
+
+void ex21() {
+    ifstream fin("D:/info/c++/clion/metodaGreedy/exercitii.txt");
+    int n;
+    Interval interval[100] = {};
+    fin >> n;
+    for(int i = 0; i < n; i++) {
+        fin >> interval[i].low >> interval[i].high;
+        interval[i].nr = i;
+    }
+
+    quickSort7(interval, 0, n - 1);
+    int rez = 0;
+    bool folosit[100] = {};
+    for(int i = 0; i < n - 1; i++) {
+        if(!folosit[interval[i].nr]) {
+            for(int j = i + 1; j < n; j++) {
+                if(!folosit[interval[j].nr] && interval[i].low < interval[j].low && interval[i].high > interval[j].high) {
+                    rez++;
+                    folosit[interval[j].nr] = true;
+                }
+            }
+        }
+    }
+
+    cout << rez << endl;
+}
+
+
 #endif //EXERCITII_H
