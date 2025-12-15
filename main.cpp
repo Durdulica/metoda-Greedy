@@ -1,5 +1,5 @@
-#include "exercitii.h"
+#include "tests.h"
 
 int main() {
-    ex21();
+    ruleazaToateTestele();
 }

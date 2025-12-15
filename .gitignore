@@ -1,0 +1,49 @@
+# CLion / IntelliJ IDEA
+.idea/
+*.iml
+.idea_modules/
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries/
+.idea/**/shelf/
+.idea/httpRequests/
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/gradle.xml
+.idea/**/libraries
+cmake-build-*/
+
+# CMake/CLion build artifacts
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+Testing/
+*.cmake
+
+# Executables and objects
+main_build
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+
+# Logs and traces
+*.log
+*.tmp
+*.trace
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# User files
+*.swp
+*.swo
